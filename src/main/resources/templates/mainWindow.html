@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+
+    <style th:replace="fragments/style"></style>
+</head>
+<body style="background: url('img/background.jpg'); background-size: cover" >
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+
+    <div class="container" style="margin-top: 70px;">
+        <div class="row">
+            <div class="col-sm-9">
+
+                <div class="row" style="margin-top: 70px;">
+                    <div class="col-sm-4">
+                        <a href="products.html" style="text-decoration: none !important; color: black !important"> <img src="../img/items.png" alt=""><h3 class="home-icon"><strong>New Products</strong></h3></a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="#"style="text-decoration: none !important; color: black !important"> <img src="../img/purchase.png" alt=""><h3 class="home-icon"><strong>Manage Purchases</strong></h3></a>
+                    </div>
+                    <div class="col-sm-4 block">
+                        <a href="#"style="text-decoration: none !important; color: black !important"> <img src="../img/order.png" alt=""><h3 class="home-icon"><strong>Manage Orders</strong></h3></a>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 70px;">
+                    <div class="col-sm-4">
+                        <a href="#"style="text-decoration: none !important; color: black !important"> <img src="../img/list.png" alt=""><h3 class="home-icon"><strong>GRN</strong></h3></a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="#"style="text-decoration: none !important; color: black !important"> <img src="../img/truck.png" alt=""><h3 class="home-icon"><strong>GDN</strong></h3></a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="test/test.html" onclick="window.open('test/test.html',
+                       'newwindow',
+                       'width=300','height=500');
+                       return false;" style="text-decoration: none !important; color: black !important"> <img src="../img/pos.png" alt=""><h3 class="home-icon"><strong>POS</strong></h3></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-3">
+                <div class="panel panel-info transparnt ">
+                    <div class="panel-heading">Notifications</div>
+                    <div class="panel-body">Today Sales</div>
+                    <div class="panel-body">Customer count</div>
+                    <div class="panel-body">Basket value</div>
+                    <div class="panel-body"></div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+</body>
+</html>

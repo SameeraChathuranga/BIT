@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+
+    <style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 50px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading text-center">
+            <h4><b><span th:text="${addStatus==true?'New Item Add':'Update Item'}"></span></b></h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 ">
+                    <a class="btn btn-primary" href="/home"> Return Home</a>
+                </div>
+                <div class="col-sm-4" style="text-align: center;">
+                    <h4 class="text-info"></h4>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <a href="/item">
+                        <button class="btn btn-sm btn-primary"><span
+                                class="glyphicon glyphicon-list">&nbsp; View List </span></button>
+                    </a>
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="container-fluid">
+                    <form class="form-horizontal" th:action="${addStatus==true?'/item/add':'/item/update'}"
+                          th:method="POST" th:object="${item}">
+                        <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
+                        <ul>
+                            <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+                        </ul>
+                        <div class="col-sm-6 text-left">
+                            <div class="form-group" th:if="${addStatus==false}">
+                                <label class="control-label col-md-4" for="txtId">ID :</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="txtId" name="id" placeholder="Enter ID Here"
+                                           th:field="*{id}" type="text"/>
+                                    <span class="error" th:errors="*{id}" th:if="${#fields.hasErrors('id')}">Error Number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="code">Code <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-3">
+                                    <input class="form-control" id="code" name="code" placeholder="Enter code"
+                                           required th:value="${newItem}" type="text"/>
+                                    <span class="error" th:errors="*{code}" th:if="${#fields.hasErrors('code')}">Error code</span>
+                                </div>
+                                <div class="col-sm-5 text-warning" th:if="${addStatus==true}">
+                                    <label class="control-label ">Previous Code: <span
+                                            th:text="${lastItem}"></span></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="description">Description<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="description" name="description"
+                                           placeholder="Enter Full Description Here" required th:field="*{description}"
+                                           type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="generic">Generic Name</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="generic" name="generic"
+                                           placeholder="Enter Generic name Here"
+                                           required th:field="*{generic}" type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" th:for="category">Category</label>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="category" th:field="*{category}">
+                                        <option th:each="category : ${category}"
+                                                th:text="${category.category}"
+                                                th:value="${category}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col-sm-6 -->
+                        <div class="col-sm-6 text-left">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="cost">Cost</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="cost" name="cost" placeholder="Enter Cost Here"
+                                           th:field="*{cost}" type="text"/>
+                                    <span class="error" th:errors="*{cost}" th:if="${#fields.hasErrors('cost')}">Error Cost</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="selling">Selling Price</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="selling" name="selling"
+                                           placeholder="Enter Selling Price Here"
+                                           th:field="*{selling}" type="text"/>
+                                    <span class="error" th:errors="*{selling}" th:if="${#fields.hasErrors('selling')}">Error Email</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" th:for="status">Item Status</label>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="status" th:field="*{status}">
+                                        <option th:each="status : ${status}"
+                                                th:text="${status.status}"
+                                                th:value="${status}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" th:if="${soh != null}">
+                                <label class="control-label col-md-4" for="soh"> Stock On Hand <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-8">
+                                    <label class="form-control" id="soh" name="soh" th:field="*{soh}"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="reorderLimit">Reorder Limit</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="reorderLimit" name="reorderLimit"
+                                           placeholder="Enter Reorder Limit Here"
+                                           th:field="*{reorderLimit}" type="text" required/>
+                                    <span class="error" th:errors="*{reorderLimit}" th:if="${#fields.hasErrors('reorderLimit')}">Error Email</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center row">
+                            <button class="btn btn-success" type="submit"><span
+                                    class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span
+                                    th:text="${addStatus==true?'Save': 'Update'}"></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+</body>
+</html>
