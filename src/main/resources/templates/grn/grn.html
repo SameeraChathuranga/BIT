@@ -30,9 +30,7 @@
                             <th>Index</th>
                             <th>Code</th>
                             <th>Supplier</th>
-                            <th>Created Date</th>
-                            <th>Expected Date</th>
-                            <th>Purchase Order Status</th>
+                            <th>Received Date</th>
                             <th>Remarks</th>
                             <th class="text-center">Modify</th>
                         </tr>
@@ -41,18 +39,11 @@
                         <tr th:each="grn, rowCount : ${grns}">
                             <th th:text="${rowCount.count}"></th>
                             <th th:text="${grn.code}"></th>
-                            <th th:text="${grn.supplier}"></th>
-                            <th th:text="${grn.createdDate}"></th>
-                            <th th:text="${grn.expectedDate}"></th>
-                            <th th:text="${grn.status}"></th>
+                            <th th:text="${grn.supplier.name}"></th>
+                            <th th:text="${grn.receivedDate}"></th>
                             <th th:text="${grn.remarks}"></th>
-                            <th><a class="btn btn-success" th:href="${'/grn/' + grn.id}"><i
-                                    class="fa fa-folder-open"></i>&nbsp;View</a>
-                                <a class="btn btn-primary" th:href="${'/grn/edit/' + grn.id}"><i
-                                        class="fa fa-edit"></i>&nbsp;Edit</a>
-                                <a class="btn btn-danger" th:href="${'/grn/remove/' + grn.id}"><i
-                                        aria-hidden="true" class="fa fa-trash-o"></i>
-                                    Delete</a></th>
+                            <th class="text-center"><a class="btn btn-success" th:href="${'/grn/' + grn.id}"><i
+                                    class="fa fa-folder-open"></i>&nbsp;View</a></th>
                         </tr>
                         </tbody>
                     </table>

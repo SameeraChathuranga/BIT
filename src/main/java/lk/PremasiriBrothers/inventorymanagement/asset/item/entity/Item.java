@@ -1,12 +1,12 @@
 package lk.PremasiriBrothers.inventorymanagement.asset.item.entity;
 
 
-
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.Enum.Category;
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.Enum.Status;
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.entity.SupplierItem;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.generalLedger.entity.Ledger;
-import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity.GoodReceivingManagement;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity.GrnQuantity;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.ItemQuantity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,8 +35,6 @@ public class Item {
 
     private String description;
 
-    @NotNull
-    private String generic;
 
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -47,16 +45,18 @@ public class Item {
     @OneToMany(mappedBy = "item")
     private List<Ledger> ledgers;
 
+    @OneToMany(mappedBy = "item")
+    private List<ItemQuantity> itemQuantities;
 
     @OneToMany(mappedBy = "item")
-    private List<GoodReceivingManagement> goodReceivingManagements;
+    private List<GrnQuantity> grnQuantities;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
     private BigDecimal cost;
     private BigDecimal selling;
-    private String soh;
+    private int soh;
     private int reorderLimit;
 
     private LocalDate updatedAt;

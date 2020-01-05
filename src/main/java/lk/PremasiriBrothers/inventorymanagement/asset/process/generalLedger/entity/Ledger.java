@@ -1,22 +1,21 @@
 package lk.PremasiriBrothers.inventorymanagement.asset.process.generalLedger.entity;
 
 
-
 import lk.PremasiriBrothers.inventorymanagement.asset.item.entity.Item;
-import lk.PremasiriBrothers.inventorymanagement.asset.suppliers.entity.Supplier;
-import lk.PremasiriBrothers.inventorymanagement.util.audit.AuditEntity;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Ledger extends AuditEntity {
+@EqualsAndHashCode()
+public class Ledger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,16 +24,25 @@ public class Ledger extends AuditEntity {
     private String code;
 
     @Column(nullable = false)
-    private Integer availableQuantity;
+    private int availableQuantity;
+
+    @Column(nullable = false)
+    private BigDecimal cost;
 
     @Column(nullable = false)
     private BigDecimal salePrice;
 
+    @Column(nullable = false)
+    private int reorderLimit;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate expireDate;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Item item;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Supplier supplier;
+    private LocalDate updatedAt;
 
+    private LocalDate createdAt;
 
 }

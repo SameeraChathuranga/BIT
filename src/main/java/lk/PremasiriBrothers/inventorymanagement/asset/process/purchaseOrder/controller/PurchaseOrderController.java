@@ -1,12 +1,11 @@
 package lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.controller;
 
-import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.entity.SupplierItem;
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.service.SupplierItemService;
 import lk.PremasiriBrothers.inventorymanagement.asset.item.entity.Item;
 import lk.PremasiriBrothers.inventorymanagement.asset.item.service.ItemService;
-import lk.PremasiriBrothers.inventorymanagement.asset.process.generalLedger.entity.Ledger;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.generalLedger.service.LedgerService;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.Enum.PurchaseOrderStatus;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.ItemQuantity;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.PurchaseOrder;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.service.PurchaseOrderService;
 import lk.PremasiriBrothers.inventorymanagement.asset.suppliers.entity.Supplier;
@@ -14,12 +13,19 @@ import lk.PremasiriBrothers.inventorymanagement.asset.suppliers.service.Supplier
 import lk.PremasiriBrothers.inventorymanagement.security.service.UserService;
 import lk.PremasiriBrothers.inventorymanagement.util.service.DateTimeAgeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/purchaseOrder")
@@ -46,7 +52,9 @@ public class PurchaseOrderController {
     //give all PO to frontend
     @RequestMapping
     public String purchaseOrderPage(Model model) {
-        List<PurchaseOrder> purchaseOrders = purchaseOrderService.findAll();
+        List<PurchaseOrder> purchaseOrders = purchaseOrderService.findAll().stream().
+                filter(x -> x.getPurchaseOrderStatus().equals(PurchaseOrderStatus.NOT) || x.getPurchaseOrderStatus().equals(PurchaseOrderStatus.PARTIALY))
+                .collect(Collectors.toList());
         model.addAttribute("purchaseOrders", purchaseOrders);
         return "purchaseOrder/purchaseOrder";
     }
@@ -58,6 +66,16 @@ public class PurchaseOrderController {
         model.addAttribute("purchaseOrderDetail", purchaseOrder);
         model.addAttribute("addStatus", false);
         return "purchaseOrder/purchaseOrder-detail";
+    }
+
+    // purchase order edit
+    @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
+    public String purchaseOrderEdit(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("searchArea", false);
+        model.addAttribute("addStatus", false);
+        model.addAttribute("purchaseOrder", purchaseOrderService.findById(id));
+        model.addAttribute("purchaseOrderStatus", PurchaseOrderStatus.values());
+        return "purchaseOrder/addPurchaseOrder";
     }
 
     //OP add  given start
@@ -79,27 +97,91 @@ public class PurchaseOrderController {
         return supplier1;
     }
 
-    @PostMapping("/findByItem")
-    public String searchByItem(@ModelAttribute("item") Item item, Model model) {
-        Item item1 = itemService.findByCode(item.getCode());
-        List<SupplierItem> supplierItems = supplierItemService.findSupplier(item1);
-        List<Supplier> supplier1 = new ArrayList<>();
-        for(SupplierItem s : supplierItems){
-            supplier1.add(s.getSupplier());
-        }
-        List<Ledger> ledgers = ledgerService.findBySupplierS(supplier1);
-
-
-        model.addAttribute("addStatus", true);
-        model.addAttribute("ledgers",ledgers );
+    private String commonPurchase(Model model) {
         model.addAttribute("searchArea", false);
-        model.addAttribute("purchaseOrder", new PurchaseOrder());
+        model.addAttribute("addStatus", true);
+        model.addAttribute("multipleSupplier", false);
         return "purchaseOrder/addPurchaseOrder";
     }
 
+    //Get supplier code or name to find suppliers
     @PostMapping("/findBySupplier")
-    public String searchBySupplier(@ModelAttribute("supplier") Supplier supplier, Model model) {
+    public String searchBySupplier(@Valid @ModelAttribute("supplier") Supplier supplier, Model model) {
+
+        List<Supplier> suppliers = supplierService.search(supplier);
         List<Item> items = new ArrayList<>();
+        if (suppliers.size() == 1) {
+            supplierItemService.findBySupplier1(suppliers.get(0))
+                    .forEach((supplierItem) -> items.add(supplierItem.getItem()));
+
+            List<ItemQuantity> itemQuantities = new ArrayList<>();
+
+            for (Item item : items) {
+                ItemQuantity itemQuantity = new ItemQuantity();
+                itemQuantity.setItem(item);
+                itemQuantity.setQuantity(0);
+                itemQuantities.add(itemQuantity);
+            }
+            //create a new purchase order
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
+
+            purchaseOrder.setItemQuantity(itemQuantities);
+
+            model.addAttribute("purchaseOrder", purchaseOrder);
+            model.addAttribute("supplier", suppliers.get(0));
+            return commonPurchase(model);
+        }
+        model.addAttribute("suppliers", suppliers);
+        model.addAttribute("multipleSupplier", true);
+
+        return "purchaseOrder/addPurchaseOrder";
+    }
+
+    @RequestMapping(value = {"/add", "/update"}, method = RequestMethod.POST)
+    public String addPurchaseOrder(@Valid @ModelAttribute("purchaseOrder") PurchaseOrder purchaseOrder, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Integer userId = userService.findByUserIdByUserName(auth.getName());
+        if (result.hasErrors()) {
+            for (FieldError error : result.getFieldErrors()) {
+                System.out.println(error.getField() + ": " + error.getDefaultMessage());
+            }
+            model.addAttribute("addStatus", true);
+        }
+        System.out.println("purchase reviwdw " + purchaseOrder.getSupplier());
+        try {
+            String input = "";
+            if (purchaseOrderService.findLastPONumber() == null) {
+                input = "PBPO0";
+            } else {
+                input = purchaseOrderService.findLastPONumber().getCode();
+            }
+            String po = input.replaceAll("[^0-9]+", "");
+            Integer PONumber = Integer.parseInt(po);
+            int newPONumber = PONumber + 1;
+            purchaseOrder.setCode("PBPO" + newPONumber);
+            purchaseOrder.setPurchaseOrderStatus(PurchaseOrderStatus.NOT);
+            purchaseOrder.setSupplier(purchaseOrder.getSupplier());
+            purchaseOrder.setCreatedDate(dateTimeAgeService.getCurrentDate());
+            purchaseOrder.setUpdatedDate(dateTimeAgeService.getCurrentDate());
+//            List<ItemQuantity> itemQuantities = new ArrayList<>();
+            for (ItemQuantity itemQuantity : purchaseOrder.getItemQuantity()) {
+                if(!(itemQuantity.getQuantity() == 0)) {
+                    itemQuantity.setPurchaseOrder(purchaseOrder);
+                    itemQuantity.setAmount(itemQuantity.getAmount());
+                }
+
+            }
+//        save purchase order
+            purchaseOrderService.persist(purchaseOrder);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+//        System.out.println(purchaseOrder.toString());
+        return "redirect:/purchaseOrder";
+    }
+
+    /* List<Item> items = new ArrayList<>();
         Supplier supplier1 = commonSearch(supplier);
         List<SupplierItem> supplierItems = supplierItemService.findItems(supplier1);
         for (SupplierItem s : supplierItems) {
@@ -116,8 +198,13 @@ public class PurchaseOrderController {
         model.addAttribute("purchaseOrderStatus", PurchaseOrderStatus.values());
         model.addAttribute("searchArea", false);
         model.addAttribute("purchaseOrder", new PurchaseOrder());
-        return "purchaseOrder/addPurchaseOrder";
+        return "purchaseOrder/addPurchaseOrder";*/
+
+    @RequestMapping(value = "/remove/{id}", method = RequestMethod.GET)
+    public String deletePurchaseOrder(@PathVariable Integer id) {
+        PurchaseOrder purchaseOrder = purchaseOrderService.findById(id);
+        purchaseOrder.setPurchaseOrderStatus(PurchaseOrderStatus.CANCELLED);
+        purchaseOrderService.persist(purchaseOrder);
+        return "redirect:/purchaseOrder";
     }
-
-
 }

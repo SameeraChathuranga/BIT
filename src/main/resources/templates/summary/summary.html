@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Premasiri Brothers</title>
+    <style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav class="navbar navbar-default" style="margin-bottom: 60px" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading text-center">
+            <h3><span th:text="${{date}}"></span>&nbsp;Summary</h3>
+        </div>
+        <div class="container text-center">
+            <div class="panel panel-body">
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#dateFilter">Click Here For Date Filters</button>
+                <div id="dateFilter" class="collapse">
+                    <div class="container-fluid"
+                         th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
+                        <div class="row">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="container-fluid text-center">
+                                        <h4 class="text-info"><b> Custom Search</b></h4>
+                                        <form class="form-inline" th:object="${dateObject}"
+                                              th:action="@{/report/search}" th:method="POST">
+                                            <div class="form-group">
+                                                <label for="startDate">FROM :</label>
+                                                <input class="form-control" id="startDate" name="startDate"
+                                                       th:field="*{startDate}" type="date"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="endDate">TO :</label>
+                                                <input class="form-control" id="endDate" name="endDate"
+                                                       th:field="*{endDate}" type="date"/>
+                                            </div>
+                                            <button class="btn btn-success" id="btnSummaryFind" type="submit"><span
+                                                    class="glyphicon glyphicon-search"></span>&nbsp;Search
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid"
+                     th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')') || #authorization.expression('hasRole(''ROLE_CASHIER'')')}">
+                    <div class="row" id="summary">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class="col-sm-6"><h4> Date : <span th:text="${{date}}"></span></h4></div>
+                                    <div class="col-sm-6"><h4> User : <span th:text="${user}"></span></h4></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-offset-2 col-sm-8">
+                                    <div class="table-responsive">
+                                        <table class="table  table-striped table-condensed table-bordered">
+                                            <caption class="text-center text-primary"><b><i><span
+                                                    th:text="${givenDate}"></span>&nbsp;
+                                                COLLECTION REPORT</i></b></caption>
+                                            <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Price (Rs.)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr class="text-primary">
+                                                <th>TOTAL COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalCollection}}"></span></th>
+                                            </tr>
+                                            <tr class="text-warning">
+                                                <th>DISCOUNT COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{discountedAmount}}"></span>
+                                                </th>
+                                            </tr>
+                                            <tr class="text-info">
+                                                <th>TOTAL CASH COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalCash}}"></span></th>
+                                            </tr>
+                                            <tr class="text-info">
+                                                <th>TOTAL CARD & CHEQUE COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalCard}}"></span></th>
+                                            </tr>
+                                            <tr class="text-success">
+                                                <th>CASH TO BE DEPOSITED</th>
+                                                <th class="text-right"><span th:text="${{needToDeposit}}"></span></th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid" >
+                            <button class="btn btn-success" onclick="printContent('summary')"><span
+                                    class="glyphicon glyphicon-print"></span>&nbsp;Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid "
+                     th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
+                    <div class="row" id="workLoad">
+                        <div class="col-sm-offset-2 col-sm-8">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-condensed table-bordered">
+                                    <caption class="text-center text-primary"><b><i><span
+                                            th:text="${givenDate}"></span>&nbsp;
+                                        WORK LOAD REPORT</i></b></caption>
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>Item</th>
+                                        <th>Count</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="text-info">
+                                        <th>Invoiced Count</th>
+                                        <th class="text-right" th:text="${{invoicedCount}}"></th>
+                                    </tr>
+                                    <tr class="text-info">
+                                        <th>Customer Count</th>
+                                        <th class="text-right" th:text="${{patientCount}}"></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid" >
+                            <button class="btn btn-success" onclick="printContent('workLoad')"><span
+                                    class="glyphicon glyphicon-print"></span>&nbsp;Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+</body>
+</html>

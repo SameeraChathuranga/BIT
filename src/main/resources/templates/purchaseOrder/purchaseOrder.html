@@ -16,7 +16,7 @@
                 <div class="col-sm-12">
                     <form class="form-inline">
                         <div class="form-group">
-                            <a class="btn btn-success" th:href="${'/purchaseOrder/add'}"><i class="fa fa-user-plus"></i>
+                            <a class="btn btn-success" th:href="${'/purchaseOrder/addFind'}"><i class="fa fa-user-plus"></i>
                                 &nbsp; New Purchase Order</a>
                         </div>
                     </form>
@@ -33,7 +33,7 @@
                             <th>Created Date</th>
                             <th>Expected Date</th>
                             <th>Purchase Order Status</th>
-                            <th>Remarks</th>
+                            <th>Total</th>
                             <th class="text-center">Modify</th>
                         </tr>
                         </thead>
@@ -41,18 +41,16 @@
                         <tr th:each="purchaseOrder, rowCount : ${purchaseOrders}">
                             <th th:text="${rowCount.count}"></th>
                             <th th:text="${purchaseOrder.code}"></th>
-                            <th th:text="${purchaseOrder.supplier}"></th>
+                            <th th:text="${purchaseOrder.supplier.name}"></th>
                             <th th:text="${purchaseOrder.createdDate}"></th>
                             <th th:text="${purchaseOrder.expectedDate}"></th>
-                            <th th:text="${purchaseOrder.status}"></th>
-                            <th th:text="${purchaseOrder.remarks}"></th>
-                            <th><a class="btn btn-success" th:href="${'/purchaseOrder/' + purchaseOrder.id}"><i
+                            <th th:text="${purchaseOrder.purchaseOrderStatus.purchaseOrderStatus}"></th>
+                            <th th:text="${purchaseOrder.total}"></th>
+                            <th class="text-center"><a class="btn btn-success" th:href="${'/purchaseOrder/' + purchaseOrder.id}"><i
                                     class="fa fa-folder-open"></i>&nbsp;View</a>
-                                <a class="btn btn-primary" th:href="${'/purchaseOrder/edit/' + purchaseOrder.id}"><i
-                                        class="fa fa-edit"></i>&nbsp;Edit</a>
                                 <a class="btn btn-danger" th:href="${'/purchaseOrder/remove/' + purchaseOrder.id}"><i
                                         aria-hidden="true" class="fa fa-trash-o"></i>
-                                    Delete</a></th>
+                                    Cancel</a></th>
                         </tr>
                         </tbody>
                     </table>

@@ -44,10 +44,10 @@ public class ProfileController {
     public String passwordChange(@Valid @ModelAttribute PasswordChange passwordChange, Model model, BindingResult result) {
         User user = userService.findById(userService.findByUserIdByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         System.out.println(passwordChange.toString());
-        if (passwordEncoder.matches(passwordChange.getOpsw(), user.getPassword()))
+        if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword()))
             if (!result.hasErrors()) {
-                if (passwordChange.getNpsw().equals(passwordChange.getNrepsw())) {
-                    user.setPassword(passwordChange.getNpsw());
+                if (passwordChange.getNewPassword().equals(passwordChange.getNewPasswordConform())) {
+                    user.setPassword(passwordChange.getNewPassword());
                     userService.persist(user);
                     System.out.println("user password update");
                     model.addAttribute("message", "Successfully Change Your Password");

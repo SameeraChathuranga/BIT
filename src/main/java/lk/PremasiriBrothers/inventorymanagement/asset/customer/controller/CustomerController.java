@@ -70,7 +70,7 @@ public class CustomerController {
         try {
             String input = "";
             if (customerService.lastCustomer() == null) {
-                input = "EHS00";
+                input = "PBC00";
             } else {
                 input = customerService.lastCustomer().getNumber();
             }
@@ -79,7 +79,7 @@ public class CustomerController {
             int newCustomerNumber = CustomerNumber+1;
             model.addAttribute("addStatus", true);
             model.addAttribute("lastCustomer",input);
-            model.addAttribute("newCustomer","EHS"+ newCustomerNumber);
+            model.addAttribute("newCustomer","PBC"+ newCustomerNumber);
             model.addAttribute("title", Title.values());
             Model gender = model.addAttribute("gender", Gender.values());
             model.addAttribute("customer", new Customer());

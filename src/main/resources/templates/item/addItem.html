@@ -67,14 +67,7 @@
                                            type="text"/>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="generic">Generic Name</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="generic" name="generic"
-                                           placeholder="Enter Generic name Here"
-                                           required th:field="*{generic}" type="text"/>
-                                </div>
-                            </div>
+                            
                             <div class="form-group">
                                 <label class="control-label col-md-4" th:for="category">Category</label>
                                 <div class="col-md-4">
@@ -115,13 +108,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group" th:if="${soh != null}">
-                                <label class="control-label col-md-4" for="soh"> Stock On Hand <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-8">
-                                    <label class="form-control" id="soh" name="soh" th:field="*{soh}"></label>
-                                </div>
-                            </div>
+                            
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="reorderLimit">Reorder Limit</label>
                                 <div class="col-md-8">
@@ -129,6 +116,23 @@
                                            placeholder="Enter Reorder Limit Here"
                                            th:field="*{reorderLimit}" type="text" required/>
                                     <span class="error" th:errors="*{reorderLimit}" th:if="${#fields.hasErrors('reorderLimit')}">Error Email</span>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group" hidden>
+                                <label class="control-label col-md-4" for="soh">sohh</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="soh" name="soh"
+                                           th:field="*{soh}" type="text" />
+                                    
+                                </div>
+                            </div>
+                            <div class="form-group" hidden>
+                                <label class="control-label col-md-4" for="createdAt">createdAt</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="createdAt" name="createdAt"
+                                           th:field="*{createdAt}" type="date" />
+        
                                 </div>
                             </div>
                         </div>

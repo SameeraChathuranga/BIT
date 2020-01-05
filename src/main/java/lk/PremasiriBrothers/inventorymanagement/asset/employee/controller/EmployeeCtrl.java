@@ -43,19 +43,19 @@ public class EmployeeCtrl {
     @GetMapping("/create")
     public User saveEmployee(){
         Employee employee = new Employee();
-        employee.setName("Dilun");
-        employee.setCallingName("Defwrgwrgwrg");
-        employee.setAddress("wrgwrwrwe");
-        employee.setCivilStatus(CivilStatus.MARRIED);
+        employee.setName("Sameera");
+        employee.setCallingName("sameera");
+        employee.setAddress("62/3/1, Pelpolawatta, Godagama, Meegoda");
+        employee.setCivilStatus(CivilStatus.UNMARRIED);
         employee.setDateOfBirth(LocalDate.now());
         employee.setDesignation(Designation.ADMIN);
         employee.setGender(Gender.MALE);
-        employee.setEmail("dilunp4@gmail.com");
+        employee.setEmail("sameerachathuranga76@gmail.com");
         employee.setEmployeeStatus(EmployeeStatus.WORKING);
-        employee.setLand("0112879346");
-        employee.setMobile("0772928483");
+        employee.setLand("");
+        employee.setMobile("0769214150");
         employee.setNumber("E0001");
-        employee.setNic("933390268V");
+        employee.setNic("199316600268");
         employee.setTitle(Title.MR);
         employee.setDoassignment(LocalDate.now());
 
@@ -71,7 +71,7 @@ public class EmployeeCtrl {
 
         user.setRoles(set);
         user.setEnabled(true);
-        user.setUsername("Dilun");
+        user.setUsername("sameera");
         user.setPassword("12345");
         userService.persist(user);
 

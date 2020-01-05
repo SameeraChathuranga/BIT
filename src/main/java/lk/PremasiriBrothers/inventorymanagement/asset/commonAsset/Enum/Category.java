@@ -1,17 +1,24 @@
 package lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.Enum;
 
 public enum Category {
-    TABLET("Tablet"),
-    CAPSULE("Capsule"),
-    SYRUP("Syrup"),
-    DROPS("Drops"),
-    INJECTION("Injection"),
-    CREAM("Cream"),
-    SPRAY("Spray"),
-    SITEM("Surgical Item"),
-    LOCALAPP("Local Application"),
-    RADIOITEM("Radiology Item"),
-    DRESSING("Dressing");
+
+    BEVERAGE("Beverages"),
+    CANNED("Canned"),
+    DAIRY("Dairy"),
+    DRY("Dry"),
+    DBACKING("Baking Goods"),
+    FROZEN("Frozen Foods"),
+    MEAT("Meat"),
+    PPRODUCE("Produce"),
+    CLEANERS("Cleaners"),
+    PERSONALCARE("Personal Care"),
+    OTHER("Other");
+
+
+
+
+
+    ;
 
     private final String category;
 

@@ -40,6 +40,8 @@ public class SupplierItemService {
         return supplierItemDao.findByItem(item);
     }
 
-
+    public List<SupplierItem> findBySupplier1(Supplier supplier){
+        return supplierItemDao.findBySupplier(supplier);
+    }
 
 }

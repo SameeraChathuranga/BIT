@@ -13,6 +13,7 @@
             <h4><b><span th:text="${addStatus==true?'New GRN Add':'Update GRN '}"></span></b></h4>
         </div>
         <div class="panel-body">
+            <!--Page Header Content-->
             <div class="row">
                 <div class="col-sm-4 ">
                     <a class="btn btn-primary" href="/home"> Return Home</a>
@@ -27,116 +28,217 @@
                     </a>
                 </div>
             </div>
+            <div class="container-fluid" th:if="${searchArea==true}">
+                <div class="col-sm-offset-2">
+                    <div class="row" style="width: 50%; height: 10vh; background-color: #2eabf1; margin: auto 400px auto auto;">
+                        <form action="/grn/findByPOCode" class="form-horizontal" method="post">
+                            <div class="row">
+                                <div class="col-sm-9" style="display: flex; flex-direction: row; justify-content: center; align-items: flex-end">
+                                    <div class="col-md-6 form-group">
+                                        <label for="code">PO Code:</label>
+                                        <input class="form-control" type="text" id="code" name="code"
+                                               placeholder="Please Enter PO code">
+                                    </div> &nbsp;
+                                    <div class="text-center col-md-1 form-group">
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <!-- /.row -->
             <div class="row">
-                <div class="container-fluid">
-                    <form class="form-horizontal"
-                          th:action="${addStatus==true?'/grn/add':'/grn/update'}"
-                          th:method="POST" th:object="${grn}">
-                        <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
-                        <ul>
-                            <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
-                        </ul>
-                        <div class="col-sm-6 text-left">
-                            <div class="form-group" th:if="${addStatus==false}">
-                                <label class="control-label col-md-4" for="txtId">ID :</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="txtId" name="id" placeholder="Enter ID Here"
-                                           th:field="*{id}" type="text"/>
-                                    <span class="error" th:errors="*{id}"
-                                          th:if="${#fields.hasErrors('id')}">Error Number</span>
+                <div class="container-fluid" th:if="${searchArea==false}">
+                    <div class="row">
+                        <form class="form-horizontal"
+                              th:action="${addStatus==true?'/grn/add':'/grn/update'}"
+                              th:method="POST" th:object="${grn}">
+                            <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
+                            <ul>
+                                <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+                            </ul>
+                            <div th:if="${addStatus==true}" class="row text-center bg-info"
+                                 style="margin: auto; width: 90%; border-radius: 10px;">
+                                <h3 th:text="${grn.supplier.name}"></h3>
+                                <input type="hidden" th:field="*{supplier}"/>
+                                <input type="hidden" th:field="*{purchaseOrder}"/>
+                            </div>
+                            <!--From Start-->
+                            <div class="row text-left" th:if="${addStatus==false}">
+                                <br>
+                                <div class="col-sm-6">
+                                    <div class="form-group ">
+                                        <label class="control-label col-md-4" for="id">ID :</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="id" placeholder="Enter ID Here"
+                                                   th:field="*{id}" type="text" readonly/>
+                                            <span class="error" th:errors="*{id}"
+                                                  th:if="${#fields.hasErrors('id')}">Error Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="control-label col-md-4" for="code">Code :</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="code" placeholder="Enter Code Here"
+                                                   th:field="*{code}" type="text" readonly/>
+                                            <span class="error" th:errors="*{code}"
+                                                  th:if="${#fields.hasErrors('code')}">Error Number</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="code">Code <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-3">
-                                    <input class="form-control" id="code" name="code" placeholder="Enter code"
-                                           required th:value="${newGrn}" type="text"/>
-                                    <span class="error" th:errors="*{code}"
-                                          th:if="${#fields.hasErrors('code')}">Error code</span>
-                                </div>
-                                <div class="col-sm-5 text-warning" th:if="${addStatus==true}">
-                                    <label class="control-label ">Previous Code: <span
-                                            th:text="${lastGrn}"></span></label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="supplier">Supplier</label>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="supplier" required>
-                                        <option th:each="suppliers : ${supplier}"
-                                                th:text="${suppliers.name}"
-                                                th:value="${suppliers.id}"
-                                        ></option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container-fluid">
+                            <!--Amount Calculation and Delete Unwanted Rows from the Item table-->
+                            <script>
+                                function calculateAmount() {
+                                    let quantity = [];
+                                    let cost = [];
+                                    let amounts = [];
+                                    let t = 0.0;
 
-                            <div>
-                                <label class="control-label col-md-4" for="">Item <span
-                                        class="text-danger">*</span></label>
+                                    let qty = document.querySelectorAll("#qty");
+                                    let cst = document.querySelectorAll("#cost");
+                                    let amnt = document.querySelectorAll("#amount");
 
-                            </div>
-                        </div>
-                        <!-- /.col-sm-6 -->
-                        <div class="col-sm-6 text-left">
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="contactName">Contact Person Name</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="contactName" name="contactName"
-                                           placeholder="Enter Contact Person Name Here"
-                                           th:field="*{contactName}" type="text"/>
-                                    <span class="error" th:errors="*{contactName}"
-                                          th:if="${#fields.hasErrors('contactName')}">Error Name</span>
+                                    if (qty.length === cst.length) {
+                                        for (let i = 0; i < qty.length; i++) {
+                                            quantity.push(parseFloat(qty[i].value));
+                                        }
+                                        for (let r = 0; r < cst.length; r++) {
+                                            cost.push(parseFloat(cst[r].value));
+                                        }
+                                        for (let n = 0; n < qty.length; n++) {
+                                            amnt[n].value = quantity[n] * cost[n];
+                                            if (!isNaN(amnt[n].value)) {
+                                                amounts.push(parseFloat(amnt[n].value));
+                                            } else {
+                                                amnt[n].value = 0.0;
+                                                amounts.push(parseFloat(amnt[n].value));
+                                            }
+
+                                        }
+                                        for (let m = 0; m < amounts.length; m++) {
+                                            t = t + amounts[m];
+                                        }
+                                        document.getElementById("total").value = t.toFixed(2);
+                                    }
+                                }
+
+                                function deleteRows(r) {
+                                    let i = r.parentNode.parentNode.rowIndex;
+                                    document.getElementById("table_items").deleteRow(i);
+                                    calculateAmount();
+                                }
+                            </script>
+                            <!--End of script-->
+                            <div class="row">
+                                <div class="table-responsive" style="margin: auto; width: 90%">
+                                    <table class="table table-striped table-condensed text-center" id="table_items">
+                                        <thead>
+                                        <tr>
+                                            <th>Index</th>
+                                            <th>Item</th>
+                                            <th>Available Qty.</th>
+                                            <th>Cost</th>
+                                            <th>Selling Price</th>
+                                            <th>Expired Date</th>
+                                            <th>Requested Qty.</th>
+                                            <th>Received Qty.</th>
+                                            <th>Amount</th>
+                                            <th class="text-center">Modify</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="item, rowCount : ${grn.grnQuantities }">
+                                            <th th:text="${rowCount.count}"></th>
+                                            <th>
+                                                <span th:text="${item.item.description}"></span>
+                                                <input type="hidden"
+                                                       th:field="*{grnQuantities[__${rowCount.index}__].item.id}">
+                                            </th>
+                                            <th th:text="${item.item.soh}"></th>
+                                            <th><input class="form-control" type="text" id="cost"
+                                                       th:field="*{grnQuantities[__${rowCount.index}__].item.cost}"
+                                                       onkeyup="calculateAmount()"></th>
+                                            <th><input class="form-control" type="text"
+                                                       th:field="*{grnQuantities[__${rowCount.index}__].item.selling}">
+                                            </th>
+                                           
+                                            <th><input class="form-control" type="text"
+                                                       th:field="*{grnQuantities[__${rowCount.index}__].requestedQty}"
+                                                       readonly></th>
+                                            <th><input class="form-control" type="text" id="qty"
+                                                       th:field="*{grnQuantities[__${rowCount.index}__].receivedQuantity}"
+                                                       onkeyup="calculateAmount()"></th>
+                                            <th><input class="form-control" type="text" id="amount"
+                                                       th:field="*{grnQuantities[__${rowCount.index}__].amount}"
+                                                       readonly></th>
+
+
+                                            <th><a class="btn btn-danger" onclick="deleteRows(this)"><i
+                                                    aria-hidden="true" class="fa fa-trash-o"></i>
+                                                Delete</a></th>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="8" class="text-right"><label
+                                                    class="control-label text-capitalize">Total
+                                                :</label></th>
+                                            <th><input type="text" id="total" class="form-control" th:field="*{total}"
+                                                       readonly></th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="contactEmail">Email</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="contactEmail" name="contactEmail"
-                                           placeholder="Enter Contact Person email Here"
-                                           th:field="*{contactEmail}" type="text"/>
-                                    <span class="error" th:errors="*{contactEmail}"
-                                          th:if="${#fields.hasErrors('contactEmail')}">Error Email</span>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group text-left">
+                                        <label class="control-label col-md-4" for="receivedDate">Received Date :</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="receivedDate"
+                                                   th:field="*{receivedDate}" type="date" required/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="contactMobile"> Contact Person Mobile <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="contactMobile" name="contactMobile"
-                                           placeholder="Enter Contact Person Mobile Here"
-                                           required th:field="*{contactMobile}" type="text"/>
-                                    <span class="error" th:errors="*{contactMobile}"
-                                          th:if="${#fields.hasErrors('contactMobile')}">Error Mobile Number</span>
+                            <div class="row">
+                                <div class="col-sm-6 text-left">
+                                    <div class="form-group text-left">
+                                        <label class="control-label col-md-4" for="supplierInvoice">Supplier Invoice No.:</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="supplierInvoice"
+                                                   th:field="*{supplierInvoice}" type="text" required/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="items">Items:</label>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="items" th:field="*{ids}" multiple required>
-                                        <option th:each="item : ${items}"
-                                                th:text="${item.description}"
-                                                th:value="${item.id}"
-                                        ></option>
-                                    </select>
+                            <div class="row">
+                                <div class="col-sm-6 text-left">
+                                    <div class="form-group text-left">
+                                        <label class="control-label col-md-4" for="remarks">Remarks :</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="remarks" placeholder="Enter Remarks Here"
+                                                   th:field="*{remarks}" type="text"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="text-center row">
-                            <button class="btn btn-success" type="submit"><span
-                                    class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span
-                                    th:text="${addStatus==true?'Save': 'Update'}"></span></button>
-                        </div>
-                    </form>
+                            <div class="text-center row">
+                                <button class="btn btn-success" type="submit"><span
+                                        class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span
+                                        th:text="${addStatus==true?'Save': 'Update'}"></span></button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <footer class="page-footer" th:replace="fragments/footer"></footer>
-    <script th:replace="fragments/script"></script>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
 </body>
 </html>

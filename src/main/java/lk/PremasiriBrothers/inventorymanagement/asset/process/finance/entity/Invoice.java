@@ -5,25 +5,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.PremasiriBrothers.inventorymanagement.asset.customer.entity.Customer;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.finance.entity.Enum.InvoicePrintOrNot;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.finance.entity.Enum.PaymentMethod;
-import lk.PremasiriBrothers.inventorymanagement.util.audit.AuditEntity;
-import lombok.*;
+import lk.PremasiriBrothers.inventorymanagement.security.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode( callSuper = true )
 @JsonIgnoreProperties(value = {"balance","discountAmount","bankName","cardNumber"}, allowGetters = true)
-public class Invoice extends AuditEntity {
+public class Invoice {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(name = "number", nullable = false, unique = true)
-    private Integer number;
+    private String number;
 
     @Column(name = "payment_method", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
@@ -35,7 +42,7 @@ public class Invoice extends AuditEntity {
 
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
+    private BigDecimal TotalAmount;
 
     @Column(name = "discountAmount",  precision = 10, scale = 2)
     private BigDecimal discountAmount;
@@ -46,12 +53,12 @@ public class Invoice extends AuditEntity {
     @Column(name = "balance", precision = 10, scale = 2)
     private BigDecimal balance;
 
-    @Column(name = "bank_name")
+//    @Column(name = "bank_name")
     private String bankName;
 
 
-    @Column(name = "card_number")
-    private Integer cardNumber;
+//    @Column(name = "card_number")
+    private String cardNumber;
 
 
     @Column(name = "remarks", length = 150)
@@ -68,6 +75,12 @@ public class Invoice extends AuditEntity {
 
     @ManyToOne
     private Customer customer;
+
+    /*@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "invoice_item",
+            joinColumns = @JoinColumn(name = "invoice_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private List<Item> items;*/
 /*
     @ManyToOne
     private Branch branch;*/
@@ -75,6 +88,11 @@ public class Invoice extends AuditEntity {
 
     @ManyToOne
     private DiscountRatio discountRatio;
+    @ManyToOne
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
+    private List<InvoiceQuantity> invoiceQuantities;
 
 
     /*@ManyToOne

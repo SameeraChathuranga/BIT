@@ -8,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -48,5 +49,17 @@ public class PurchaseOrderService implements AbstractService<PurchaseOrder, Inte
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<PurchaseOrder> purchaseOrderExample = Example.of(purchaseOrder, matcher);
         return purchaseOrderDao.findAll(purchaseOrderExample);
+    }
+
+    public PurchaseOrder findLastPONumber() {
+        return purchaseOrderDao.findFirstByOrderByIdDesc();
+    }
+
+    public PurchaseOrder findByCode(String code){
+        return purchaseOrderDao.findByCode(code);
+    }
+
+    public List<PurchaseOrder> findByCreatedAtBetween(LocalDate from, LocalDate to){
+        return purchaseOrderDao.findByCreatedDateBetween(from, to);
     }
 }

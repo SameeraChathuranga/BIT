@@ -29,6 +29,8 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	runtimeOnly 'mysql:mysql-connector-java'
 	compileOnly 'org.projectlombok:lombok'
+	//================= Following jar is need to generate pdf file -https://mvnrepository.com/artifact/com.itextpdf/itextpdf =================//
+	compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.9'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

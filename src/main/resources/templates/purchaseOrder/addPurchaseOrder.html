@@ -29,109 +29,72 @@
             </div>
             <!--search content-->
             <div class="container-fluid" th:if="${searchArea==true}">
-                <div class="row">
+                <div class="col-sm-offset-2">
                     <div class="row">
-                        <div class="col-sm-6 text-center">
-                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#supplier">Find
-                                Supplier
-                            </button>
-                        </div>
-                        <div class="col-sm-6 text-center">
-                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#item">Find Item
-                            </button>
-                        </div>
-                    </div>
-                    <!-- The Item Modal -->
-                    <div class="modal fade" id="item">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <form action="/purchaseOrder/findByItem" class="form-horizontal" method="post">
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Find By Item</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-
-                                    <!-- Modal body -->
-                                    <div class="modal-body">
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4" for="txtId">Item Code</label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" id="txtId" name="code"
-                                                       placeholder="Enter Item Code Here"
-                                                       type="text"/>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                        <div class="row">
-                                            <div class="text-left col-sm-6">
-                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close
-                                                </button>
-                                            </div>
-                                            <div class="text-right col-sm-6">
-                                                <button type="submit" class="btn btn-success">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                        <form action="/purchaseOrder/findBySupplier" class="form-horizontal" method="post">
+                            <div class="col-md-4 form-group">
+                                <label for="supp">Select Parameter:</label>
+                                <select class="form-control" id="supp">
+                                    <option value=""> Please Select</option>
+                                    <option value="name">Name</option>
+                                    <option value="code">Code</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                    <!-- The supplier Modal -->
-                    <div class="modal fade" id="supplier">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <form action="/purchaseOrder/findBySupplier" class="form-horizontal" method="post">
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Find By Supplier</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-
-                                    <!-- Modal body -->
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-md-4">
-                                                    <label for="supp">Select list:</label>
-                                                    <select class="form-control" id="supp">
-                                                        <option value=""> Please Select</option>
-                                                        <option value="name">Name</option>
-                                                        <option value="code">Code</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <label for="criteria">Value:</label>
-                                                    <input class="form-control" id="criteria"
-                                                           placeholder="Enter Value Here" required type="text"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                        <div class="row">
-                                            <div class="text-left col-sm-6">
-                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close
-                                                </button>
-                                            </div>
-                                            <div class="text-right col-sm-6">
-                                                <button type="submit" class="btn btn-success">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                            <div class="col-md-1"></div>
+                            <div class=" col-md-6 form-group text-left">
+                                <label class="" for="criteria">Value :</label>
+                                <input class="form-control" id="criteria" placeholder="Enter Search Value Here"
+                                       type="text"/>
                             </div>
-                        </div>
+                            <div class="text-center col-md-1 form-group">
+                                <br>
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+            <!--Multiple suppliers-->
+            <div class="container" th:if="${multipleSupplier==true}" style="margin-top: 5px;">
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed text-center" id="myTable">
+                        <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Land Number</th>
+                            <th>Address</th>
+                            <th>Contact Person</th>
+                            <th>Mobile</th>
+                            <th>Contact Person EMail</th>
+                            <th class="text-center">Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="supplier, rowCount : ${suppliers}">
+                            <th th:text="${rowCount.count}"></th>
+                            <th th:text="${supplier.code}"></th>
+                            <th th:text="${supplier.name}"></th>
+                            <th th:text="${supplier.email}"></th>
+                            <th th:text="${supplier.land}"></th>
+                            <th th:text="${supplier.address}"></th>
+                            <th th:text="${supplier.contactName}"></th>
+                            <th th:text="${supplier.contactMobile}"></th>
+                            <th th:text="${supplier.contactEmail}"></th>
+                            <th>
+                                <form action="/purchaseOrder/findBySupplier" method="post">
+                                    <input type="hidden" th:name="${'id'}" th:value="${supplier.id}">
+                                    <button type="submit" class="btn btn-sm btn-primary">Select</button>
+                                </form>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!--Add form content-->
             <div class="container-fluid" th:if="${searchArea==false}">
                 <div class="row">
@@ -142,52 +105,128 @@
                         <ul>
                             <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
                         </ul>
-                        <!--From Start-->
-                        <div class="form-group text-left" th:if="${addStatus==false}">
-                            <label class="control-label col-md-4" for="id">ID :</label>
-                            <div class="col-md-8">
-                                <input class="form-control" id="id" placeholder="Enter ID Here"
-                                       th:field="*{id}" type="text" readonly/>
-                                <span class="error" th:errors="*{id}"
-                                      th:if="${#fields.hasErrors('id')}">Error Number</span>
+                        <div th:if="${addStatus==true}" class="row text-center bg-primary">
+                            <h3 th:text="${supplier.name}"></h3>
+                            <input type="hidden" th:name="${'supplier'}" th:value="${supplier.id}">
+                        </div>
+                        <div th:if="${addStatus==false}" class="row text-center bg-info" style="margin: auto; width: 90%; border-radius: 10px;">
+                            <h3 th:text="${purchaseOrder.supplier.name}"></h3>
+                            <input type="hidden" th:field="*{supplier}">
+                        </div>
+                        <!--Form Start-->
+                        <div class="row text-left" th:if="${addStatus==false}">
+                            <br>
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label class="control-label col-md-4" for="id">ID :</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="id" placeholder="Enter ID Here"
+                                               th:field="*{id}" type="text" readonly/>
+                                        <span class="error" th:errors="*{id}"
+                                              th:if="${#fields.hasErrors('id')}">Error Number</span>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label class="control-label col-md-4" for="code">Code :</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="code" placeholder="Enter Code Here"
+                                               th:field="*{code}" type="text"/>
+                                        <span class="error" th:errors="*{code}"
+                                              th:if="${#fields.hasErrors('code')}">Error Number</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!--Amount Calculation and Delete Unwanted Rows from the Item table-->
+                        <script>
+                            function calculateAmount() {
+                                let quantity = [];
+                                let cost = [];
+                                let amounts = [];
+                                let t = 0.0;
+
+                                let qty = document.querySelectorAll("#qty");
+                                let cst = document.querySelectorAll(".cost");
+                                let amnt = document.querySelectorAll("#amount");
+
+                                for (let i = 0; i < qty.length; i++) {
+                                    quantity.push(parseFloat(qty[i].value));
+                                }
+                                for (let r = 0; r < cst.length; r++) {
+                                    cost.push(parseFloat(cst[r].textContent));
+                                }
+                                for (let n = 0; n < qty.length; n++) {
+                                    amnt[n].value = quantity[n] * cost[n];
+                                    if (!isNaN(amnt[n].value)){
+                                        amounts.push(parseFloat(amnt[n].value));
+                                    }else{
+                                        amnt[n].value = 0.0;
+                                        amounts.push(parseFloat(amnt[n].value));
+                                    }
+                                }
+                                for (let m = 0; m < amounts.length; m++) {
+                                    t = t + amounts[m];
+                                }
+                                document.getElementById("total").value = t.toFixed(2);
+                            }
+
+                            function deleteRows(r) {
+                                let i = r.parentNode.parentNode.rowIndex;
+                                document.getElementById("table_items").deleteRow(i);
+                                calculateAmount();
+                            }
+                        </script>
+                        <!--End of script-->
                         <div class="row">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-condensed text-center">
+                            <div class="table-responsive" style="margin: auto; width: 90%;">
+                                <table class="table table-striped table-condensed text-center" id="table_items">
                                     <thead>
                                     <tr>
                                         <th>Index</th>
-                                        <th>Supplier</th>
-                                        <th>Item</th>
-                                        <th> Available Qty.</th>
-                                        <th> Requested Qty.</th>
+                                        <th style=" width: 20%">Item</th>
+                                        <th>Available Qty.</th>
+                                        <th>Reorder Limit</th>
+                                        <th style=" width: 10%">Requested Qty.</th>
+                                        <th>Item Cost</th>
+                                        <th style=" width: 15%">Amount</th>
                                         <th class="text-center">Modify</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="ledger, rowCount : ${ledgers}">
-                                        <th th:text="${rowCount.count}"></th>
-                                        <th th:text="${ledger.supplier.name}">
-                                            <input type="hidden" th:value="${ledger.supplier}">
+                                    <tr th:each="item, rowCount : ${purchaseOrder.itemQuantity}">
+                                        <th th:text="${rowCount.count}">
+                                        <th th:text="${item.item.description}"></th>
+                                        <th class="text-center" th:text="${item.item.soh}"></th>
+                                        <th class="text-center" th:text="${item.item.reorderLimit}"></th>
+                                        <th><input type="hidden"
+                                                   th:field="*{itemQuantity[__${rowCount.index}__].item}"
+                                                   th:value="${item.item}">
+                                            <input type="number" min="1" class="form-control" id="qty" onkeyup="calculateAmount()"
+                                                   th:field="*{itemQuantity[__${rowCount.index}__].quantity}"></th>
+                                        <th><span class="cost" th:text="${item.item.cost}"></span></th>
+                                        <th><input type="number" step=".01" class="form-control" id="amount"
+                                                   th:field="*{itemQuantity[__${rowCount.index}__].amount}" readonly>
                                         </th>
-                                        <th th:text="${ledger.item.description}">
-                                            <input type="hidden" th:value="${ledger.item}">
-                                        </th>
-                                        <th th:text="${ledger.availableQuantity}"></th>
-                                        <th><input type="text" th:field="*{quantity}">
-
-                                        <th><a class="btn btn-danger"><i
+                                        <th><a class="btn btn-danger" onclick="deleteRows(this)"><i
                                                 aria-hidden="true" class="fa fa-trash-o"></i>
                                             Delete</a></th>
                                     </tr>
                                     </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th colspan="6" class="text-right"><label class="control-label text-capitalize">Total
+                                            :</label></th>
+                                        <th><input type="text" id="total" class="form-control" th:field="*{total}"
+                                                   readonly></th>
+                                    </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group text-left">
+                                <div class="form-group">
                                     <label class="control-label col-md-4" for="expectedDate">Expected Date :</label>
                                     <div class="col-md-8">
                                         <input class="form-control" id="expectedDate" placeholder="Enter ID Here"
@@ -195,25 +234,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6" th:if="${addStatus == false}">
-                                <div class="form-group">
+                            <div class="col-sm-6">
+                                <div class="form-group" th:if="${addStatus == false}">
                                     <label class="control-label col-md-4" for="poS">PO Status</label>
                                     <div class="col-md-4">
                                         <select class="form-control" id="poS" th:field="*{purchaseOrderStatus}">
                                             <option th:each="p : ${purchaseOrderStatus}"
                                                     th:text="${p.purchaseOrderStatus}"
-                                                    th:value="${p}"></option>
+                                                    th:value="${p}"
+                                                    th:field="*{purchaseOrderStatus}"
+                                            ></option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group text-left">
-                                <label class="control-label col-md-4" for="remarks">Remarks :</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="remarks" placeholder="Enter Remarks Here"
-                                           th:field="*{remarks}" type="text"/>
+                            <div class="col-sm-6 text-left">
+                                <div class="form-group text-left">
+                                    <label class="control-label col-md-4" for="remarks">Remarks :</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="remarks" placeholder="Enter Remarks Here"
+                                               th:field="*{remarks}" type="text"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -232,3 +275,17 @@
 <script th:replace="fragments/script"></script>
 </body>
 </html>
+<!--
+PurchaseOrder(id=null,
+code=null,
+purchaseOrderStatus=null,
+createdDate=null,
+expectedDate=null,
+updatedDate=null,
+remarks=null,
+itemQuantity=[
+lk.excellent.pharamacy_management.asset.process.purchaseOrder.entity.ItemQuantity@324c9afe,
+lk.excellent.pharamacy_management.asset.process.purchaseOrder.entity.ItemQuantity@324c9afe,
+lk.excellent.pharamacy_management.asset.process.purchaseOrder.entity.ItemQuantity@324c9afe,
+lk.excellent.pharamacy_management.asset.process.purchaseOrder.entity.ItemQuantity@324c9afe],
+goodReceivingManagements=null)-->

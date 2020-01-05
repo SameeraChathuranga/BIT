@@ -16,7 +16,7 @@
                 <div class="col-sm-12">
                     <form class="form-inline">
                         <div class="form-group">
-                            <a class="btn btn-success" th:href="${'/invoice/add'}"><i class="fa fa-user-plus"></i>
+                            <a class="btn btn-success" th:href="${'/invoice/addForm'}"><i class="fa fa-user-plus"></i>
                                 &nbsp; New Invoice</a>
                         </div>
                     </form>
@@ -29,30 +29,23 @@
                         <tr>
                             <th>Index</th>
                             <th>Code</th>
-                            <th>Supplier</th>
+                            <th>Customer</th>
                             <th>Created Date</th>
-                            <th>Expected Date</th>
-                            <th>Purchase Order Status</th>
-                            <th>Remarks</th>
+                            <th>Payment Method</th>
+                            <th>Total Amount</th>
                             <th class="text-center">Modify</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="invoice, rowCount : ${invoices}">
                             <th th:text="${rowCount.count}"></th>
-                            <th th:text="${invoice.code}"></th>
-                            <th th:text="${invoice.supplier}"></th>
-                            <th th:text="${invoice.createdDate}"></th>
-                            <th th:text="${invoice.expectedDate}"></th>
-                            <th th:text="${invoice.status}"></th>
-                            <th th:text="${invoice.remarks}"></th>
+                            <th th:text="${invoice.number}"></th>
+                            <th th:text="${invoice.customer.name}"></th>
+                            <th th:text="${invoice.invoicedAt}"></th>
+                            <th th:text="${invoice.paymentMethod}"></th>
+                            <th th:text="${invoice.totalAmount}"></th>
                             <th><a class="btn btn-success" th:href="${'/invoice/' + invoice.id}"><i
                                     class="fa fa-folder-open"></i>&nbsp;View</a>
-                                <a class="btn btn-primary" th:href="${'/invoice/edit/' + invoice.id}"><i
-                                        class="fa fa-edit"></i>&nbsp;Edit</a>
-                                <a class="btn btn-danger" th:href="${'/invoice/remove/' + invoice.id}"><i
-                                        aria-hidden="true" class="fa fa-trash-o"></i>
-                                    Delete</a></th>
                         </tr>
                         </tbody>
                     </table>

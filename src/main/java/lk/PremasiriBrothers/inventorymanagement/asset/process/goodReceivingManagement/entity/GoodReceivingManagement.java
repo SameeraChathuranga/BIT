@@ -1,23 +1,25 @@
 package lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity;
 
 
-import lk.PremasiriBrothers.inventorymanagement.asset.item.entity.Item;
-import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity.Enum.GRNStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.PurchaseOrder;
-import lk.PremasiriBrothers.inventorymanagement.util.audit.AuditEntity;
+import lk.PremasiriBrothers.inventorymanagement.asset.suppliers.entity.Supplier;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class GoodReceivingManagement extends AuditEntity {
+@EqualsAndHashCode
+@JsonIgnoreProperties(value = {"updatedDate", "remarks"}, allowGetters = true)
+public class GoodReceivingManagement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,24 +27,29 @@ public class GoodReceivingManagement extends AuditEntity {
     @Column(unique = true)
     private String code;
 
-    @Enumerated(EnumType.STRING)
-    private GRNStatus grnStatus;
+    @ManyToOne
+    private Supplier supplier;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Item item;
-
-    private String quantity;
-
-    @Column(unique = true)
-    private BigDecimal selPrice;
-
-    @Column(unique = true)
-    private BigDecimal cost;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate updatedDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate receivedDate;
+
+    private String supplierInvoice;
+
+    private String remarks;
+
+    private BigDecimal total;
+
+    @ManyToOne
     private PurchaseOrder purchaseOrder;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "goodReceivingManagement")
+    private List<GrnQuantity> grnQuantities;
 
 }
 

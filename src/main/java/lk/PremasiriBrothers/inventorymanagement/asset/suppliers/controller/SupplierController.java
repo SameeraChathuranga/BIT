@@ -84,7 +84,7 @@ public class SupplierController {
         try {
             String input = "";
             if (supplierService.lastSupplier() == null) {
-                input = "EHS00";
+                input = "PBS0";
             } else {
                 input = supplierService.lastSupplier().getCode();
             }
@@ -93,7 +93,7 @@ public class SupplierController {
             int newSupplierCode = SupplierCode + 1;
 
             model.addAttribute("lastSupplier", input);
-            model.addAttribute("newSupplier", "EHS" + newSupplierCode);
+            model.addAttribute("newSupplier", "PBS" + newSupplierCode);
             model.addAttribute("title", Title.values());
             model.addAttribute("items", itemService.findAll());
 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8"/>
+<title>Premasiri Brothers</title>
+<th:block th:replace="fragments/style"></th:block>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
+<div class="col-sm-offset-3 col-sm-6">
+    <div class="panel panel-primary " style="margin-top: 210px">
+        <div class="panel panel-heading text-center">
+            <h4><b><span th:text="${addStatus==true?'New Discount Add':'Update Discount'}"></span></b></h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 ">
+                    <a class="btn btn-primary" href="/home"> Return Home</a>
+                </div>
+                <div class="col-sm-4" style="text-align: center;">
+                    <h4 class="text-info"></h4>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <a href="/discount">
+                        <button class="btn btn-sm btn-primary"><span
+                                class="glyphicon glyphicon-list">&nbsp; View List </span></button>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container text-center">
+                    <form class="form-horizontal" th:action="${addStatus==true?'/discount/add':'/discount/update'}"
+                          th:object="${discount}" th:method="POST">
+                        <div class="col-sm-6 text-center">
+                            <div class="form-group" th:if="${addStatus==false}">
+                                <label class="control-label col-md-4" for="txtId">ID :</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="txtId" name="id" placeholder="Enter ID Here"
+                                           th:field="*{id}" type="text"/>
+                                    <span class="error" th:errors="*{id}" th:if="${#fields.hasErrors('id')}">Error Number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="name">Name</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="name" placeholder="Enter Name Here" class="form-control"
+                                           name="name" th:field="*{name}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error Name</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="amount">Amount</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="amount" placeholder="Enter Discount Ratio Here"
+                                           class="form-control" name="amount" th:field="*{amount}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Error New Password</span>
+                                </div>
+                            </div>
+                            <div class="text-center row">
+                                <button class="btn btn-success" type="submit"><span
+                                        class="glyphicon glyphicon-thumbs-up"
+                                        th:text="${addStatus==true?' Save Discount': ' Update Discount'}"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<th:block th:replace="fragments/script"></th:block>
+</body>
+</html>
