@@ -77,7 +77,7 @@ public class EmployeeController {
         int newEmployeeNumber = employeeNumber+1;
         model.addAttribute("addStatus", true);
         model.addAttribute("lastEmployee", input);
-        model.addAttribute("newEmployee", "EHL"+newEmployeeNumber);
+        model.addAttribute("newEmployee", "PBE"+newEmployeeNumber);
         model.addAttribute("title", Title.values());
         model.addAttribute("gender", Gender.values());
         model.addAttribute("civilStatus", CivilStatus.values());

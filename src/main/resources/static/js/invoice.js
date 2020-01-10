@@ -356,7 +356,7 @@ function selectedItem(obj) {
     for (let n = 0; n < itemSelected.length; n++) {
         array.push(itemSelected[n].textContent);
     }
-    // console.log(array);
+    console.log(array);
 
     let selectedItemsTable = document.getElementById("selectedItems");
     let rowCount = selectedItemsTable.rows.length;
@@ -367,25 +367,13 @@ function selectedItem(obj) {
     row.insertCell(1).innerHTML = `<span>${array[1]}</span>`;
     row.insertCell(2).innerHTML = `<span>${array[2]}</span>`;
     row.insertCell(3).innerHTML = `<span>${array[3]}</span>`;
-    if (array[3] == "Tablet" || array[3] == "Capsule") {
-        row.insertCell(4).innerHTML = `<span id="selling">${array[4]}</span>`;
-        row.insertCell(5).innerHTML = `<select class="form-control" default="1" id="frequencyRatio" name="frequencyRatio" onChange="calculateAmount()"><option value="2">BD</option><option value="3">TDS</option><option value="1">OD</option><option value="1">OM </option><option value="1">ON </option><option value="4">QDS</option><option value="6">QQH</option><option value="3">TID</option><option value="5">FIVE_TIMES</option></select>`;
-        row.insertCell(6).innerHTML = '<input id="pills" name="pills" class="form-control" type="number" onkeyup="calculateAmount()">';
-        row.insertCell(7).innerHTML = '<input id="duration" class="form-control" type="number" onkeyup="calculateAmount()">';
-        row.insertCell(8).innerHTML = `<input id="qty" class="form-control" type="text" name="invoiceQuantities[${index}].quantity" onkeyup="calculateAmount()">`;
-        row.insertCell(9).innerHTML = `<input id="amount" class="form-control" name="invoiceQuantities[${index}].amount" readonly type="text">`;
-    }
-    else {
-        row.insertCell(4).innerHTML = `<span id="SyrupSelling">${array[4]}</span>`;
-        row.insertCell(5).innerHTML = '<select disabled class="form-control" default="1" id="frequencyRatio" name="frequencyRatio"><option>BD <span type="hidden" value="2"></span></option><option>TDS <span type="hidden" value="3"></span></option><option>OD <span type="hidden" value="1"></span></option><option>OM <span type="hidden" value="1"></span></option><option>ON <span type="hidden" value="1"></span></option> <option>PRN <span type="hidden" value="0"></span></option><option>QDS <span type="hidden" value="4"></span></option> <option>QQH <span type="hidden" value="6"></span></option> <option>TID <span type="hidden" value="3"></span></option> <option>FIVE_TIMES <span type="hidden" value="5"></span></option></select>';
-        row.insertCell(6).innerHTML = '<input class="form-control" disabled type="number">';
-        row.insertCell(7).innerHTML = '<input class="form-control" disabled type="number">';
-        row.insertCell(8).innerHTML = `<input id="SyrupQty" class="form-control" name="invoiceQuantities[${index}].quantity" type="text" onkeyup="calculateAmount()">`;
-        row.insertCell(9).innerHTML = `<input id="SyrupAmount" class="form-control" name="invoiceQuantities[${index}].amount" readonly type="text">`;
-    }
-
-
-        row.insertCell(10).innerHTML = '<button type="button" class="btn btn-danger" onClick="deleteRow(this)">Remove</button>';
+    // row.insertCell(4).innerHTML = `<span>${array[4]}</span>`;
+    row.insertCell(4).innerHTML = `<span id="selling">${array[4]}</span>`;
+    row.insertCell(5).innerHTML = `<input id="qty" class="form-control" name="invoiceQuantities[${index}].quantity" 
+type="text" onkeyup="calculateAmount()">`;
+    row.insertCell(6).innerHTML = `<input id="amount" class="form-control" name="invoiceQuantities[${index}].amount" 
+readonly type="text">`;
+    row.insertCell(7).innerHTML = '<button type="button" class="btn btn-danger" onClick="deleteRow(this)">Remove</button>';
 
 
 }
@@ -395,81 +383,40 @@ function calculateAmount() {
     //<editor-fold desc="Properties need for Calculation">
     let quantity = [];
     let selling = [];
-    let pillQty = [];
-    let frequency = [];
-    let durationArray = [];
-    let amount = [];
     let t = 0.0;
-    let Squantity = [];
-    let selling1 = [];
     let amounts = [];
     let qty = document.querySelectorAll("#qty");
     let sel = document.querySelectorAll("#selling");
     let amnt = document.querySelectorAll("#amount");
+
     //</editor-fold>
 
-   /* //<editor-fold desc="Calculate Amount of Tablets and Capsules">
-    for (let i = 0; i < pills.length; i++) {
-        pillQty.push(parseFloat(pills[i].value));
-    }
-
+    //<editor-fold desc="Calculate Amount of Other Categories">
     for (let w = 0; w < sel.length; w++) {
         selling.push(parseFloat(sel[w].textContent));
     }
-    for (let r = 0; r < freq.length; r++) {
-        frequency.push(parseFloat(freq[r].value));
-    }
 
-    for (let r = 0; r < duration.length; r++) {
-        if (!isNaN(duration[r].value)) {
-            durationArray.push(parseFloat(duration[r].value));
-        }
+    for (let i = 0; i < qty.length; i++) {
+        quantity.push(parseFloat(qty[i].value));
     }
 
     for (let n = 0; n < qty.length; n++) {
-        qty[n].value = pillQty[n] * frequency[n] * durationArray[n];
-        if (!isNaN(qty[n].value)) {
-            quantity.push(parseFloat(qty[n].value));
+        amnt[n].value = quantity[n] * selling[n];
+        if (!isNaN(amnt[n].value)) {
+            amounts.push(parseFloat(amnt[n].value));
         } else {
-            qty[n].value = 0;
-            quantity.push(parseFloat(qty[n].value));
-        }
-    }
-
-    for (let val = 0; val < quantity.length; val++) {
-        let price = selling[val] * quantity[val];
-        amnt[val].value = price.toFixed(2);
-
-        if (!isNaN(amnt[val].value)) {
-            amount.push(parseFloat(amnt[val].value));
-        } else {
-            amnt[val].value = 0.0;
-            amount.push(parseFloat(amnt[val].value));
-        }
-    }
-    //</editor-fold>*/
-
-    //<editor-fold desc="Calculate Amount of Other Categories">
-    for (let w = 0; w < sel1.length; w++) {
-        selling1.push(parseFloat(sel1[w].textContent));
-    }
-
-    for (let i = 0; i < Sqty.length; i++) {
-        Squantity.push(parseFloat(Sqty[i].value));
-    }
-
-    for (let n = 0; n < Sqty.length; n++) {
-        amnt1[n].value = Squantity[n] * selling1[n];
-        if (!isNaN(amnt1[n].value)) {
-            amounts.push(parseFloat(amnt1[n].value));
-        } else {
-            amnt1[n].value = 0.0;
-            amounts.push(parseFloat(amnt1[n].value));
+            amnt[n].value = 0.0;
+            amounts.push(parseFloat(amnt[n].value));
         }
     }
     //</editor-fold>
 
-    calculateTotal(amount, amounts);
+    for (let m = 0; m < amounts.length; m++) {
+        t = t + amounts[m];
+    }
+    document.getElementById("totalPrice").value = t.toFixed(2);
+    discountedPrice();
+    // calculateTotal(amount, amounts);
 }
 
 function calculateTotal(amount1, amount2) {

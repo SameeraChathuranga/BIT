@@ -93,7 +93,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             if (!exists) {
                 new File(filePath).mkdirs();
             }
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + "invoices" + ".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file+"/"+"invoices"+".pdf"));
             document.open();
             Font mainFont = FontFactory.getFont("Arial", 15, BaseColor.BLACK);
             Font priceFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
@@ -110,7 +110,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             paragraph.setSpacingAfter(10);
             document.add(paragraph);
 
-            Paragraph customer = new Paragraph("Customer : " + invoice.getCustomer().getName() + "      " + "Mobile : " + invoice.getCustomer().getMobile()
+            Paragraph customer = new Paragraph("Customer : "+invoice.getCustomer().getName()+"      "+"Mobile : "+invoice.getCustomer().getMobile()
                     , customerFont);
             customer.setAlignment(Element.ALIGN_LEFT);
             customer.setIndentationLeft(50);
@@ -165,10 +165,10 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             }
             document.add(table);
 
-            Paragraph TotalPrice = new Paragraph("Total Price :" + invoice.getTotalPrice() + "\n" +
-                    "Discount :" + invoice.getDiscountAmount() + "\n" +
-                    "Net Amount : " + invoice.getTotalAmount() + "\n" +
-                    "Payed By : " + invoice.getPaymentMethod().getPaymentMethod() + "\n"
+            Paragraph TotalPrice = new Paragraph("Total Price :"+invoice.getTotalPrice() +"\n" +
+                    "Discount :"+invoice.getDiscountAmount()+"\n" +
+                    "Net Amount : "+invoice.getTotalAmount()+"\n" +
+                    "Payed By : "+invoice.getPaymentMethod().getPaymentMethod()+"\n"
                     , priceFont);
             TotalPrice.setAlignment(Element.ALIGN_RIGHT);
             TotalPrice.setIndentationLeft(50);

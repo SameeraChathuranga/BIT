@@ -8,7 +8,7 @@
 <body>
 <nav th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 50px">
-    <div class="panel panel-primary">
+    <div class="panel panel-info">
         <div class="panel panel-heading text-center">
             <h4><b><span th:text="${addStatus==true?'New Supplier Add':'Update Supplier'}"></span></b></h4>
         </div>
@@ -129,7 +129,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="items">Items:</label>
                                 <div class="col-md-8">
-                                    <select class="form-control" id="items" th:field="*{ids}" multiple required>
+                                    <select class="form-control" id="items" th:field="*{ids}" multiple ><!--required-->
                                         <option th:each="item : ${items}"
                                                 th:text="${item.description}"
                                                 th:value="${item.id}"

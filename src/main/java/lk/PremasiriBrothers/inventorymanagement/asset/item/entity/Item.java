@@ -4,6 +4,7 @@ package lk.PremasiriBrothers.inventorymanagement.asset.item.entity;
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.Enum.Category;
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.Enum.Status;
 import lk.PremasiriBrothers.inventorymanagement.asset.commonAsset.entity.SupplierItem;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.finance.entity.InvoiceQuantity;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.generalLedger.entity.Ledger;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity.GrnQuantity;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.ItemQuantity;
@@ -21,7 +22,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
 public class Item {
 
 
@@ -50,6 +50,9 @@ public class Item {
 
     @OneToMany(mappedBy = "item")
     private List<GrnQuantity> grnQuantities;
+
+    @OneToMany(mappedBy = "item")
+    private List<InvoiceQuantity> invoiceQuantities;
 
     @Enumerated(EnumType.STRING)
     private Status status;

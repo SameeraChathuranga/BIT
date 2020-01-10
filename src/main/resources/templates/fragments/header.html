@@ -1,9 +1,10 @@
 <link rel="stylesheet" th:href="@{/css/myCss.css}" type="text/css"/>
-<nav class="navbar navbar-default navbar-fixed-top nav" th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
+<nav class="navbar navbar-default navbar-fixed-top nav" th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml"
+     style="background-color: #1b6d85">
 		<div class="container-fluid"  >
-			<div class="navbar-header">
-				<h3 class="text-info mainWindowText navbar-header-text"><b> &nbsp; Premasiri Brothers</b> &nbsp;&nbsp;</h3>
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			<div class="navbar-header"><a href="/home" >
+				<h3 class="text-info mainWindowText navbar-header-text" style="color: white"><b> &nbsp; Premasiri Brothers</b>&nbsp;<i class="fa fa-home"></i> &nbsp;&nbsp;</h3></a>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" >
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -11,27 +12,28 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar" style="color: white">
 				<ul class="nav navbar-nav" >
-					<li class="dropdown dropdown-toggle"><a href="/home" ><h4>Home</h4></a></li>
-					<li class="dropdown dropdown-toggle" sec:authorize="!isAuthenticated()"><a  href="/invoiceProcess">Lab Test &amp; Medical Package</a></li>
+				<!--//	<li class="dropdown dropdown-toggle"><a href="/home" ><h5 style="color: white">Home</h5></a></li>-->
+					
 			 		<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">General <span class="caret"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()" style="color: white">General <span class="caret"></span></a>
 						<!--CASHIER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
 							<li><a href="/customer">Customer Management</a></li>
 						</ul>
 						<!--MANAGER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
-							<li><a href="/employee">Employee Management</a></li>
-							<li><a href="/customer">Customer Management</a></li>
-							<li><a href="/supplier">Supplier Management </a></li>
 							<li><a href="/item">Item Management </a></li>
-							<li><a href="/invoice">Invoice Management</a></li>
+							<li><a href="/supplier">Supplier Management </a></li>
+							<li><a href="/customer">Customer Management</a></li>
+							<li><a href="/employee">Employee Management</a></li>
 							<li><a href="/user">User Management </a></li>
+							<li><a href="/invoice">Invoice Management</a></li>
+							
 						</ul>
 					</li>
 
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">Data Maintenance<span class="caret"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()" style="color: white">Data Maintenance<span class="caret"></span></a>
 						<!--CASHIER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
 							<li><a href="/invoiceProcess">Make Invoice</a></li>
@@ -41,64 +43,58 @@
 						</ul>
 						<!--MANAGER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
-							<li><a href="/employee/add">Employee Registration</a></li>
-							<li><a href="/customer/add">Customer Registration</a></li>
-							<li><a href="/supplier/add">Supplier Registration</a></li>
 							<li><a href="/item/add">Add a New Item</a></li>
-							<li><a href="/user/add">New User</a></li>
+							<li><a href="/supplier/add">Supplier Registration</a></li>
+							<li><a href="/customer/add">Customer Registration</a></li>
+							<li><a href="/employee/add">Employee Registration</a></li>
+							<li><a href="/user/add">User Registration</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">Transaction <span class="caret"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()" style="color: white">Transaction <span class="caret"></span></a>
 						<!--MANAGER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
 							<li><a href="/purchaseOrder">Purchase Orders </a></li>
 							<li><a href="/grn/add">Received Goods</a></li>
+							<li><a href="/invoice/addForm">Invoicing</a></li>
 						</ul>
 					</li>
 					<li class="dropdown" >
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">Report<span class="caret"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()" style="color: white">Report<span class="caret"></span></a>
 						<!--CASHIER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
 							<li><a href="/process/summary">Summury </a></li>
 						</ul>
-						<!--MLT1 NAV BAR CONTENT -->
-						<!--<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}">
-							<li><a href="/process/summary">Summary</a></li>
-						</ul>-->
-						<!--MLT2 NAV BAR CONTENT -->
-						<!--<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MLT2'')')}">
-							<li><a href="/process/summary">Summary  </a></li>
-						</ul>-->
+						
 						<!--MANAGER NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
-							<li><a href="/sammary">Summary </a></li>
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" >
+							<li><a href="/itemReport/form" >Summary </a></li>
+							<li><a href="/itemReport/purchaseOrderForm">Purchase Order Report </a></li>
+						<!--	<li><a href="/itemReport/goodReceivedForm">Purchase Order Report </a></li>-->
+							<li><a href="/report/form">Income Report </a></li>
 						</ul>
-						<!--PHLABOTO NAV BAR CONTENT -->
-						<!--<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMY'')')}">
-							<li><a href="/process/summary">Patient Count </a></li>
-						</ul>-->
+						
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right ">
-					<li class="dropdown"  sec:authorize="isAuthenticated()">
-						<a href="/login"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp; <span class="mainWindowText">Log out</span></a>
+					<li class="dropdown"  sec:authorize="isAuthenticated()" >
+						<a href="/login"><span class="glyphicon glyphicon-log-out" style="color: white"></span>&nbsp;&nbsp; <span class="mainWindowText" style="color: white">Log out</span></a>
 					</li>
-					<li class="dropdown"  sec:authorize="!isAuthenticated()">
-						<a th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp; <span class="mainWindowText">Login</span></a>
+					<li class="dropdown"  sec:authorize="!isAuthenticated()" style="color: white">
+						<a th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp; <span class="mainWindowText" style="color: white">Login</span></a>
 					</li>
 				</ul>
-				<ul class="nav navbar-nav navbar-right" sec:authorize="isAuthenticated()">
+				<ul class="nav navbar-nav navbar-right" sec:authorize="isAuthenticated()" style="color: white">
 					<li class="dropdown ">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;
-							<span th:text="${#authentication.name}"></span>
-							<span class="caret"></span>
+							<span class="glyphicon glyphicon-user" style="color: white"></span>&nbsp;&nbsp;
+							<span th:text="${#authentication.name}" style="color: white"></span>
+							<span class="caret" style="color: white"></span>
 						</a>
 						<ul class="dropdown-menu">
 							<li>
 								<a href="/profile">
-									<i class="fas fa-user-tie"></i>
+									<i class="fas fa-user-tie" ></i>
 									&nbsp;Profile
 								</a>
 							</li>

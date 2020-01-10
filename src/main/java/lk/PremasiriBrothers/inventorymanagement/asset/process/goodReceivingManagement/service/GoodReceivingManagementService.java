@@ -2,6 +2,7 @@ package lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingMana
 
 import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.dao.GoodReceivingManagementDao;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity.GoodReceivingManagement;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.PurchaseOrder;
 import lk.PremasiriBrothers.inventorymanagement.util.interfaces.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -54,5 +56,9 @@ public class GoodReceivingManagementService implements AbstractService<GoodRecei
 
     public GoodReceivingManagement lastGrn(){
         return goodReceivingManagementDao.findFirstByOrderByIdDesc();
+    }
+
+    public List<GoodReceivingManagement> findByCreatedAtBetween(LocalDate from, LocalDate to){
+        return goodReceivingManagementDao.findByCreatedDateBetween(from, to);
     }
 }

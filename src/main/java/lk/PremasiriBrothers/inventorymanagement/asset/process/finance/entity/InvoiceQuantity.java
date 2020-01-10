@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class InvoiceQuantity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

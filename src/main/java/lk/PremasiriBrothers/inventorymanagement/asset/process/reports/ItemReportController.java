@@ -2,6 +2,8 @@ package lk.PremasiriBrothers.inventorymanagement.asset.process.reports;
 
 import lk.PremasiriBrothers.inventorymanagement.asset.item.entity.Item;
 import lk.PremasiriBrothers.inventorymanagement.asset.item.service.ItemService;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.entity.GoodReceivingManagement;
+import lk.PremasiriBrothers.inventorymanagement.asset.process.goodReceivingManagement.service.GoodReceivingManagementService;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.entity.PurchaseOrder;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.purchaseOrder.service.PurchaseOrderService;
 import lk.PremasiriBrothers.inventorymanagement.asset.process.reports.entityHelp.ReportHelp;
@@ -25,15 +27,17 @@ import java.util.List;
 public class ItemReportController {
 
     private final PurchaseOrderService purchaseOrderService;
+    private final GoodReceivingManagementService goodReceivingManagementService;
     private final UserService userService;
     private final ItemService itemService;
     private final DateTimeAgeService dateTimeAgeService;
 
 
     @Autowired
-    public ItemReportController(PurchaseOrderService purchaseOrderService, UserService userService, ItemService itemService, DateTimeAgeService dateTimeAgeService) {
+    public ItemReportController(PurchaseOrderService purchaseOrderService, GoodReceivingManagementService goodReceivingManagementService, UserService userService, ItemService itemService, DateTimeAgeService dateTimeAgeService) {
 
         this.purchaseOrderService = purchaseOrderService;
+        this.goodReceivingManagementService = goodReceivingManagementService;
 
         this.userService = userService;
 
@@ -92,5 +96,31 @@ public class ItemReportController {
         List<PurchaseOrder> purchaseOrders = purchaseOrderService.findByCreatedAtBetween(reportHelp.getStartDate(), reportHelp.getEndDate());
         model.addAttribute("purchaseOrders", purchaseOrders);
         return "summary/POSummary";
+    }
+
+    @GetMapping("/goodReceivedForm")
+    public String goodReceviedDailyReport(Model model){
+        model.addAttribute("givenDate", dateTimeAgeService.getCurrentDate().toString());
+        User user = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("dateObject", new ReportHelp());
+        model.addAttribute("date", dateTimeAgeService.getCurrentDateTime());
+        model.addAttribute("user", user.getEmployee().getTitle().getTitle() + " " + user.getEmployee().getName());
+        List<GoodReceivingManagement> goodReceivingManagements = goodReceivingManagementService.findByCreatedAtBetween(dateTimeAgeService.getCurrentDate(), dateTimeAgeService.getCurrentDate());
+        model.addAttribute("goodReceivingManagements", goodReceivingManagements);
+        return "summary/GRNSummary";
+    }
+
+    @PostMapping("/GRNrange")
+    public String goodReceviedDailyReport(@Valid @ModelAttribute ReportHelp reportHelp, Model model){
+        User user = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        model.addAttribute("dateObject", new ReportHelp());
+        model.addAttribute("date", dateTimeAgeService.getCurrentDateTime());
+        model.addAttribute("user", user.getEmployee().getTitle().getTitle() + " " + user.getEmployee().getName());
+
+        model.addAttribute("givenDate", "FROM : " + reportHelp.getStartDate().toString() + "  TO : " + reportHelp.getEndDate().toString());
+        List<GoodReceivingManagement> goodReceivingManagements = goodReceivingManagementService.findByCreatedAtBetween(reportHelp.getStartDate(), reportHelp.getEndDate());
+        model.addAttribute("goodReceivingManagements", goodReceivingManagements);
+        return "summary/GRNSummary";
     }
 }

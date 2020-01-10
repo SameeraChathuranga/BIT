@@ -20,7 +20,6 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Supplier {
 
     @Id

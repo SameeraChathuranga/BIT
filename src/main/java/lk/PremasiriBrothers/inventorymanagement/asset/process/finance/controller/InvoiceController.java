@@ -136,19 +136,21 @@ public class InvoiceController {
         invoice.setInvoicedAt(dateTimeAgeService.getCurrentDate());
         invoice.setDiscountAmount(operatorService.subtraction(invoice.getTotalPrice(), invoice.getTotalAmount()));
         Invoice invoice1 = invoiceService.persist(invoice);
+
+        boolean isFlag = invoiceService.createPdf(invoice1, context, request, response);
         invoice1.getInvoiceQuantities().forEach(
                 x -> {
-                    Ledger ledger = ledgerService.findByItem(x.getItem());
-                    int availableLeger = ledger.getAvailableQuantity();
-                    ledger.setAvailableQuantity(availableLeger - x.getQuantity());
-                    ledgerService.persist(ledger);
                     Item item = itemService.findById(x.getItem().getId());
                     int availableItem = item.getSoh();
                     item.setSoh(availableItem - x.getQuantity());
                     itemService.persist(item);
+                    Ledger ledger = ledgerService.findByItem(x.getItem());
+                    int availableLeger = ledger.getAvailableQuantity();
+                    ledger.setAvailableQuantity(availableLeger - x.getQuantity());
+                    ledgerService.persist(ledger);
                 }
         );
-        boolean isFlag = invoiceService.createPdf(invoice, context, request, response);
+        System.out.println("flag "+ isFlag);
         if (isFlag) {
             String fullPath = request.getServletContext().getRealPath("/resources/report/" + "invoices" + ".pdf");
             fileHandelService.filedownload(fullPath, response, "invoices.pdf");
@@ -159,13 +161,13 @@ public class InvoiceController {
     public String addInvoice(@ModelAttribute("invoice") Invoice invoice, HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer userId = userService.findByUserIdByUserName(auth.getName());
-        if (invoice.getCustomer() != null) {
+//        if (invoice.getCustomer() != null) {
             invoice.setCustomer(customerService.persist(invoice.getCustomer()));
-        } else {
-            invoice.setCustomer(null);
-        }
+//        } else {
+//            invoice.setCustomer(null);
+//        }
         commonInvoice(invoice, userId, request, response);
-        return "redirect:/invoice";
+        return "redirect:/invoice/addForm";
     }
 
 }

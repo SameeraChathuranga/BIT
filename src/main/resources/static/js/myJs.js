@@ -319,6 +319,14 @@ $("#selling").bind("keyup", function () {
     }
 });
 
+$("#amountTendered").bind("keyup", function () {
+    let amount = $(this).val();
+    if (onlyNumberRegex.test(amount)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
 
 //colour change function --start
 function backgroundColourChangeGood(id) {
