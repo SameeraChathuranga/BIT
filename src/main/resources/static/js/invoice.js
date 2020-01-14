@@ -35,6 +35,20 @@ $(document).ready(function () {
     });
 
 });
+//direct invoice without customer
+$('#noCustomer ').change(function () {
+    console.log($(this));
+
+    if ($(this).prop("checked") === true) {
+        $('#btnNewCustomer,#btnExistingCustomer').prop("disabled", true);
+        $("#customerDetail").hide();
+        $("#customerShow").hide();
+        $("#existingCustomer").hide();
+    } else {
+        $('#btnNewCustomer,#btnExistingCustomer').prop("disabled", false);
+    }
+
+});
 
 /*Customer Model*/
 class customer {
@@ -134,18 +148,14 @@ class customer {
 
 class item {
     constructor(id, code, description, category, selling
-                // , frequency, pills, duration, qty, price
+                //  qty, price
     ) {
         this._id = id;
         this._code = code;
         this._description = description;
         this._category = category;
         this._selling = selling;
-        /* this._frequency = frequency;
-         this._pills = pills;
-         this._duration = duration;
-         this._qty = qty;
-         this._price = price;*/
+
     }
 
     get id() {
@@ -180,45 +190,6 @@ class item {
         this._selling = value;
     }
 
-    /*get frequency() {
-        return this._frequency;
-    }
-
-    set frequency(value) {
-        this._frequency = value;
-    }
-
-    get pills() {
-        return this._pills;
-    }
-
-    set pills(value) {
-        this._pills = value;
-    }
-
-    get duration() {
-        return this._duration;
-    }
-
-    set duration(value) {
-        this._duration = value;
-    }
-
-    get qty() {
-        return this._qty;
-    }
-
-    set qty(value) {
-        this._qty = value;
-    }
-
-    get price() {
-        return this._price;
-    }
-
-    set price(value) {
-        this._price = value;
-    }*/
 
     get category() {
         return this._category;
@@ -251,13 +222,13 @@ function rowDataToLabTest(rowDetails) {
     }
 }
 
-//SELECTED LAB TEST
+//SELECTED  TEST
 let selectedLabTestArray = [];
-//SELECTED MEDICAL PACKAGE
+//SELECTED  PACKAGE
 let selectedMedicalPackageId;
-//SELECTED LAB TEST TOTAL PRICE
+//SELECTED TOTAL PRICE
 let totalLabTestPrice;
-//selected medical package price
+//selected  package price
 let selectedMedicalPackageNameAndPrice;
 // get current url
 let currentURL = window.location.href;
@@ -348,7 +319,7 @@ function fillCustomerDetailsForm(customerInArray) {
 function selectedItem(obj) {
     let itemIndex = obj.parentNode.parentNode.rowIndex;
     let index = itemIndex - 1;
-    console.log("index",itemIndex);
+    console.log("index", itemIndex);
     let itemTable = document.getElementById("myTable");
     let array = [];
     let itemSelected = itemTable.rows.item(itemIndex).cells;
@@ -537,5 +508,4 @@ function resetFormAfterPrint() {
     removeRows("selectedItems");
     removeRows("customers");
 }
-
 

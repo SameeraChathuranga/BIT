@@ -27,7 +27,9 @@
 							<li><a href="/customer">Customer Management</a></li>
 							<li><a href="/employee">Employee Management</a></li>
 							<li><a href="/user">User Management </a></li>
+							<li><a href="/discount">Discount Management</a></li>
 							<li><a href="/invoice">Invoice Management</a></li>
+							
 							
 						</ul>
 					</li>
@@ -48,6 +50,7 @@
 							<li><a href="/customer/add">Customer Registration</a></li>
 							<li><a href="/employee/add">Employee Registration</a></li>
 							<li><a href="/user/add">User Registration</a></li>
+							<li><a href="/discount/add">Add Discount</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -70,7 +73,7 @@
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" >
 							<li><a href="/itemReport/form" >Summary </a></li>
 							<li><a href="/itemReport/purchaseOrderForm">Purchase Order Report </a></li>
-						<!--	<li><a href="/itemReport/goodReceivedForm">Purchase Order Report </a></li>-->
+							<li><a href="/itemReport/goodReceivedForm">GRN Report </a></li>
 							<li><a href="/report/form">Income Report </a></li>
 						</ul>
 						

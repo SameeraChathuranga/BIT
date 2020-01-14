@@ -161,11 +161,12 @@ public class InvoiceController {
     public String addInvoice(@ModelAttribute("invoice") Invoice invoice, HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer userId = userService.findByUserIdByUserName(auth.getName());
-//        if (invoice.getCustomer() != null) {
+       if (invoice.getCustomer().getNic().length() == 0) {
+           System.out.println(" nic no");
+           invoice.setCustomer(customerService.findById(1));
+       } else {
             invoice.setCustomer(customerService.persist(invoice.getCustomer()));
-//        } else {
-//            invoice.setCustomer(null);
-//        }
+       }
         commonInvoice(invoice, userId, request, response);
         return "redirect:/invoice/addForm";
     }

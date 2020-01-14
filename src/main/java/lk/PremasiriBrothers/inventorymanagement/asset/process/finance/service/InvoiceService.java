@@ -99,10 +99,12 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             Font priceFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
             Font customerFont = FontFactory.getFont("Arial", 10, BaseColor.BLACK);
 
-            Paragraph paragraph = new Paragraph("Excellent Health Solution \n" +
-                    "34/5, Gunananda Road\n" +
-                    "Panadura\n" +
-                    "TP: 038 2279311 | 071 5868611\n"
+            Paragraph paragraph = new Paragraph(
+                    "Invoice \n" +
+                            "Premasiri Brothers \n" +
+                    "No.33, Station Road\n" +
+                    "Homagama\n" +
+                    "TP: 077 9691016 | 077 8921368\n"
                     , mainFont);
             paragraph.setAlignment(Element.ALIGN_CENTER);
             paragraph.setIndentationLeft(50);
@@ -129,19 +131,19 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             float[] columnWidths = {2f, 2f, 2f, 2f};
             table.setWidths(columnWidths);
 
-            PdfPCell item = new PdfPCell(new Paragraph("item", tableHeader));
+            PdfPCell item = new PdfPCell(new Paragraph("Item", tableHeader));
             commonTableHeader(item);
             table.addCell(item);
 
-            PdfPCell unitPrice = new PdfPCell(new Paragraph("unitPrice", tableHeader));
+            PdfPCell unitPrice = new PdfPCell(new Paragraph("Unit Price", tableHeader));
             commonTableHeader(unitPrice);
             table.addCell(unitPrice);
 
-            PdfPCell qty = new PdfPCell(new Paragraph("qty", tableHeader));
+            PdfPCell qty = new PdfPCell(new Paragraph("Quantity", tableHeader));
             commonTableHeader(qty);
             table.addCell(qty);
 
-            PdfPCell amount = new PdfPCell(new Paragraph("amount", tableHeader));
+            PdfPCell amount = new PdfPCell(new Paragraph("Amount", tableHeader));
             commonTableHeader(amount);
             table.addCell(amount);
 
@@ -165,9 +167,11 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             }
             document.add(table);
 
-            Paragraph TotalPrice = new Paragraph("Total Price :"+invoice.getTotalPrice() +"\n" +
+            Paragraph TotalPrice = new Paragraph(
+                    "Total Price :"+invoice.getTotalPrice() +"\n" +
                     "Discount :"+invoice.getDiscountAmount()+"\n" +
                     "Net Amount : "+invoice.getTotalAmount()+"\n" +
+                            "Balance Amount : "+invoice.getBalance()+"\n" +
                     "Payed By : "+invoice.getPaymentMethod().getPaymentMethod()+"\n"
                     , priceFont);
             TotalPrice.setAlignment(Element.ALIGN_RIGHT);
